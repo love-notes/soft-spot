@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>💌 sincerely apologize..</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#ffeef5; --bg2:#fde4e2; --accent:#ff7f9c; --card:#fffaf9; --text:#3b2f2f;
+  }
+  html,body{
+    height:100%;
+    margin:0;
+    padding:0;
+    font-family: "Roboto Mono", monospace;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .card{
+    width: min(90vw, 420px); max-height: 86vh;
+    background: var(--card);
+    border-radius:16px;
+    box-shadow: 0 12px 30px rgba(50,30,30,0.12);
+    padding:18px; overflow:hidden;
+    display:flex; flex-direction:column; gap:12px;
+    border: 1px solid rgba(255,127,156,0.18);
+  }
+  .top{display:flex;gap:12px;align-items:center;justify-content:space-between;}
+  h1{font-size:1.05rem;margin:0;color:var(--text)}
+  .hint{font-size:0.86rem;color:rgba(59,47,47,0.7)}
+  #controls{display:flex;gap:8px;align-items:center}
+  input[type="text"]{
+    padding:10px 12px;border-radius:10px;border:2px solid rgba(255,127,156,0.28);
+    outline:none;font-size:0.95rem;width:100%;box-sizing:border-box;
+  }
+  button{
+    background:var(--accent);color:white;border:none;padding:8px 12px;border-radius:10px;
+    cursor:pointer;font-family:inherit;font-size:0.95rem;
+  }
+  button.secondary{background:transparent;color:var(--accent);border:1px solid rgba(255,127,156,0.25)}
+  button:disabled{opacity:0.6;cursor:not-allowed}
+  #message{font-size:0.9rem;color:rgba(59,47,47,0.85)}
+  #letterBox{
+    background:transparent;border-radius:10px;padding:12px;border:1px dashed rgba(120,90,90,0.06);
+    overflow:auto;flex:1 1 auto;min-height:160px;white-space:pre-wrap;color:var(--text);font-size:1rem;
+  }
+  #letterInner{
+    line-height:1.6;
+    font-family: "Roboto Mono", monospace;
+    color: var(--text);
+    font-size: 1rem;
+  }
+  .small{font-size:0.85rem;color:rgba(59,47,47,0.7)}
+  .hidden{display:none}
+  .success {color: #5a8b6f}
+  .error {color: #a7475a}
+  .response-buttons{display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+  .resp-btn{
+    background: #ffdfe6; color: #4a2b2b; border-radius: 12px; padding: 10px 16px; border: 1px solid rgba(255,127,156,0.18);
+    cursor:pointer; font-family:"Roboto Mono", monospace; font-weight:700;
+  }
+  .resp-btn:hover{ background:#ffc6d6; color:#2f1f1f; }
+</style>
+</head>
+<body>
+<div class="card" role="main" aria-labelledby="title">
+  <div class="top">
+    <div>
+      <h1 id="title">💌 secret letter</h1>
+      <div class="hint">ur fav animal? clue : meow</div>
+    </div>
+    <div id="controls" class="small">Music: <span id="ms">off</span></div>
+  </div>
+  <div>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <input id="password" type="text" autocomplete="off" placeholder="type the pass!" aria-label="secret answer">
+      <button id="submitBtn">open letter</button>
+    </div>
+    <div id="message" aria-live="polite"></div>
+  </div>
+  <div id="letterBox" class="hidden" tabindex="0" aria-hidden="true">
+    <div id="letterInner" aria-live="polite"></div>
+  </div>
+  <div id="responseArea" class="hidden">
+    <div class="response-buttons hidden" id="responseButtons" aria-hidden="true">
+      <button id="yesBtn" class="resp-btn">yes</button>
+      <button id="noBtn" class="resp-btn">noo .. ( me when u tap this : (╥﹏╥) )</button>
+    </div>
+    <div class="response hidden" id="afterResponse"></div>
+    <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:8px;">
+      <button id="playMusicBtn" class="secondary hidden">▶ Play music</button>
+      <button id="pauseMusicBtn" class="secondary hidden">⏸ Pause</button>
+      <button id="openPlaylistBtn" class="hidden">tap this please!</button>
+    </div>
+  </div>
+</div>
+<audio id="bgMusic" loop preload="auto">
+  <source src="softspot.mp3" type="audio/mpeg">
+  Your browser does not support audio.
+</audio>
+<script>
+(function(){
+  const acceptedAnswers = new Set(["cat"]);
+  const telegramUrl = "https://t.me/sincerelyapologize";
+  const letterContent =
+`dear, Juan ..
+
+Juan, how are you? i hope you're doing okay..
+i wanna tell you something, but im too shy to text you, so i decided to do it this way instead.
+
+these past few days, i wont lie i've been thinking about you a lot. i cant stop thinking about you, about us .. and its been making me feel uneasy. i know things haven't been okay di antara kita dan the reason why kita ended up like this.
+
+first of all, i wanna say im so sorry.. maaf aku pernah bikin kamu sakit hati atau kecewa sama aku. i know i've made mistakes..
+i let you get close to me, but i hadn't made enough room for you in my heart, aku belum bersihin ruangan itu sebelum i let you in. and there were still things from my past that i hadn't fully healed from, sorry if you got hurt because of that :(
+
+but there's something i want you to know. maybe im not the easiest person to get close to, and there's a reason for that. awalnya aku memang engga ada niat buat buka hati dulu, apalagi buat menerima seseorang dan menjalani hubungan. it makes me afraid to let someone in again.
+
+but then you came, dan kenapa rasa nya beda?
+awalnya aku cuma mau temenan sama kamu, i didn't expect anything more than that. tapi berjalannya waktu aku sadar, the way you treated me made me feel comfortable and safe around you. your efforts, attention that you gave to me, how you made me smile and happy.. it made me slowly open up to you.
+honestly, aku engga expect aku bisa merasakan hal itu lagi sampai you came. when it comes from you, i can feel that love. 𐔌՞. .՞𐦯
+sorry it took me this long to realize my own feelings, aku pernah bilang ke kamu "i still feel nothing" but i dont think that was completely true. maybe i was just scared to admit what i was starting feeling. 
+maaf ya for making you doubt me, especially when i know you have your own fears, too. i know trusting someone isn't easy for you and i dont want you to feel like your feelings dont matter. aku juga gamau kamu merasa usaha kamu selama ini sia sia, cause it wasn't. i see your efforts, Juu, and i appreciate them more than you know.
+we both have our own fears, and maybe we still have to learn about each other. but want you to know that im willing to try..
+i dont know you will accept these words, but i still wanna ask you something.
+
+can we fix things between us? can you give me another chance to try again with you? :<
+
+i cant promise that i'll never be scared or have doubts again, but i promise to myself that i'll try to be better. i dont expect everything to go back normal right away, i just hope we can talk again, understand each other better, and give ourselves another chance.
+im starting to realize that maybe, opening my heart doesn't mean i have to stop being afraid. maybe it means being willing to try. and Juu, i think i want to try that with you..
+
+you came into my life when i wasn't even looking for someone, but somehow, you became someone i've been thinking about these past few days.
+im so sorry for everything, and thank you for being so kind and gentle with me.. thank you for making me feel comfortable enough to let you get close to me.
+ 
+you know what? i just realized these lyrics actually describe how i feel to you.
+"dont like anybody, tell me why its different with you. dont believe in love, but no one makes me feel like you do. you know i got soft spot for you. ♡" — soft spot, keshi
+
+eum, if there's still a little room left for me in your heart, can we try again? :<
+
+- K.`;
+
+  const pw = document.getElementById('password');
+  const submitBtn = document.getElementById('submitBtn');
+  const msg = document.getElementById('message');
+  const letterBox = document.getElementById('letterBox');
+  const letterInner = document.getElementById('letterInner');
+  const bgMusic = document.getElementById('bgMusic');
+  const playMusicBtn = document.getElementById('playMusicBtn');
+  const pauseMusicBtn = document.getElementById('pauseMusicBtn');
+  const openPlaylistBtn = document.getElementById('openPlaylistBtn');
+  const ms = document.getElementById('ms');
+  const responseArea = document.getElementById('responseArea');
+  const responseButtons = document.getElementById('responseButtons');
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const afterResponse = document.getElementById('afterResponse');
+
+  let unlocked=false;
+
+  function norm(s){ return (s||'').toString().trim().toLowerCase(); }
+  function flash(text,cls){
+    msg.textContent = text;
+    msg.className = cls === 'error' ? 'error' : (cls === 'success' ? 'success' : '');
+    setTimeout(()=>{ if(!unlocked) msg.textContent=''; }, 3000);
+  }
+
+  // Enter to submit
+  pw.addEventListener('keydown', e => { if(e.key==='Enter'){ e.preventDefault(); submitBtn.click(); }});
+  submitBtn.addEventListener('click', function(){
+    if(unlocked) return;
+    const v = norm(pw.value);
+    if(!v){ flash("Please type the name.", "error"); pw.focus(); return; }
+    if(acceptedAnswers.has(v)){
+      unlocked = true;
+      flash("im so sorry", "success");
+      pw.disabled = true; submitBtn.disabled = true;
+      openLetter();
+    } else {
+      flash("oopsiee, try again :(", "error"); pw.focus();
+    }
+  });
+
+  function openLetter(){
+    letterBox.classList.remove('hidden');
+    letterBox.setAttribute('aria-hidden','false');
+    letterInner.innerHTML = '';
+    tryPlayAndFade();
+    startTypewriter(letterContent, letterInner, 100, ()=> {
+      responseArea.classList.remove('hidden');
+      responseButtons.classList.remove('hidden');
+      setTimeout(()=> {
+        playMusicBtn.classList.remove('hidden');
+        pauseMusicBtn.classList.remove('hidden');
+      }, 300);
+    });
+    setTimeout(()=> letterBox.focus(), 200);
+  }
+
+  function startTypewriter(text, container, speed=100, callback){
+    let i=0;
+    function step(){
+      if(i>=text.length){ if(typeof callback==='function') callback(); return; }
+      const ch = text.charAt(i++);
+      if(ch === '\n'){
+        container.innerHTML += '<br>';
+        if(text.charAt(i) === '\n'){ i++; container.innerHTML += '<br>'; }
+        setTimeout(step, speed*6);
+      } else {
+        const safe = ch === '<' ? '&lt;' : ch === '>' ? '&gt;' : ch;
+        container.innerHTML += safe;
+        container.scrollTop = container.scrollHeight;
+        setTimeout(step, speed);
+      }
+    }
+    step();
+  }
+
+  function tryPlayAndFade(){
+    bgMusic.volume = 0;
+    const target = 0.28;
+    bgMusic.play().then(()=>{
+      ms.textContent = 'on';
+      fadeVolume(bgMusic, target, 1500);
+    }).catch(()=>{
+      ms.textContent = 'off';
+      playMusicBtn.classList.remove('hidden');
+      flash("If music doesn't start automatically, press Play music.", "");
+    });
+  }
+
+  function fadeVolume(audioElm, target, duration){
+    const steps = Math.max(6, Math.floor(duration / 60));
+    const step = (target - audioElm.volume) / steps;
+    let count = 0;
+    const iv = setInterval(()=>{
+      audioElm.volume = Math.min(target, audioElm.volume + step);
+      count++;
+      if(count >= steps || audioElm.volume >= target - 0.001){ clearInterval(iv); audioElm.volume = target; }
+    }, duration/steps);
+  }
+
+  playMusicBtn.addEventListener('click', ()=>{
+    bgMusic.play().then(()=>{ ms.textContent='on'; playMusicBtn.classList.add('hidden'); fadeVolume(bgMusic,0.28,1400);})
+    .catch(()=> flash("Unable to play audio. Your browser may restrict it.","error"));
+  });
+
+  pauseMusicBtn.addEventListener('click', ()=>{
+    if(bgMusic.paused){ bgMusic.play().then(()=> { ms.textContent='on'; }).catch(()=> flash("Can't play audio.","error")); }
+    else { bgMusic.pause(); ms.textContent='off'; }
+  });
+
+  bgMusic.addEventListener('error', ()=>{
+    playMusicBtn.classList.remove('hidden');
+    ms.textContent = 'off';
+    flash("Music couldn't be loaded from audio.mp3. Make sure the file is in the same folder as this HTML.", "error");
+  });
+
+  yesBtn.addEventListener('click', ()=> respondPositive(" *give you a flower* thank u, juu <3"));
+  noBtn.addEventListener('click', ()=> respondPositive("*crying* noooo, baby please :<"));
+
+  function respondPositive(message){
+    responseButtons.classList.add('hidden');
+    afterResponse.style.display = 'block';
+    afterResponse.textContent = message;
+    openPlaylistBtn.classList.remove('hidden');
+    openPlaylistBtn.addEventListener('click', ()=> { window.open(telegramUrl,'_blank','noopener'); }, { once: true });
+  }
+
+  playMusicBtn.classList.add('hidden');
+  pauseMusicBtn.classList.add('hidden');
+  openPlaylistBtn.classList.add('hidden');
+})();
+</script>
+</body>
+</html>
